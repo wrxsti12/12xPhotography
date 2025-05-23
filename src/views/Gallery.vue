@@ -5,19 +5,20 @@
         Gallery
       </h1>
       <p class="subtitle" data-aos="fade-up" data-aos-delay="400">
-        &nbsp;&nbsp; 靜態 × 動態 攝影精選
+        &nbsp;&nbsp; 攝影精選
       </p>
     </div>
 
-    <div class="grid-gallery">
-  <div
-    v-for="(item, index) in images"
-    :key="index"
-    class="gallery-item"
-    @click="openLightbox(item)"
-  >
-
-        <img :src="item.src" :alt="item.name" />
+    <div class="grid-gallery mobile-layout">
+      <div
+        v-for="(item, index) in images"
+        :key="index"
+        class="gallery-item"
+        @click="openLightbox(item)"
+      >
+        <div class="image-wrapper">
+          <img :src="item.src" :alt="item.name" />
+        </div>
         <div class="overlay">
           <p>{{ item.name }}</p>
         </div>
@@ -39,14 +40,14 @@ import { ref } from 'vue'
 import marbleBg from '../assets/marble.jpg'
 
 const images = [
-  { src: '/gallery/static-1.jpg', name: 'Yamaha R1' },
-  { src: '/gallery/static-2.jpg', name: 'Kawasaki Ninja400' },
-  { src: '/gallery/static-3.jpg', name: 'Kawasaki ZX-4RR' },
-  { src: '/gallery/static-4.jpg', name: 'Yamaha MT-09' },
-  { src: '/gallery/static-5.jpg', name: 'Yamaha R1 Rolling' },
-  { src: '/gallery/static-6.jpg', name: 'Ducati Panigale V4 SP2' },
-  { src: '/gallery/static-7.jpg', name: 'Yamaha R15M' },
-  { src: '/gallery/static-8.jpg', name: 'Suzuki Gsxr150' }
+  { src: '/gallery/static-1.jpg' },
+  { src: '/gallery/static-2.jpg' },
+  { src: '/gallery/static-3.jpg'},
+  { src: '/gallery/static-4.jpg' },
+  { src: '/gallery/static-5.jpg' },
+  { src: '/gallery/static-6.jpg' },
+  { src: '/gallery/static-7.jpg' },
+  { src: '/gallery/static-8.jpg' }
 ]
 
 const lightboxVisible = ref(false)
@@ -137,14 +138,15 @@ function closeLightbox() {
   cursor: pointer;
 }
 
-.gallery-item:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 28px rgba(255, 255, 255, 0.18);
+.image-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
 }
 
 .gallery-item img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
   transition: transform 0.4s ease;
 }
@@ -219,13 +221,17 @@ function closeLightbox() {
     text-align: center;
   }
 
-  .grid-gallery {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  .grid-gallery.mobile-layout {
+    grid-template-columns: 1fr;
     gap: 1rem;
   }
 
   .gallery-item {
     border-radius: 12px;
+  }
+
+  .image-wrapper {
+    aspect-ratio: 4 / 3;
   }
 }
 
