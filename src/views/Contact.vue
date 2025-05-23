@@ -7,9 +7,8 @@
 
       <!-- 品牌理念說明 -->
       <div class="brand-philosophy-text" data-aos="fade-up" data-aos-delay="200">
-        <span><strong>ONE2FRAME</strong> 是一場影像與情感的交會。</span>
-        <span>我們不只記錄瞬間，更用光與影說故事。</span>
-        <span>每次快門，都是一段專屬於你的敘事起點。</span>
+        
+
       </div>
 
       <form @submit.prevent="sendEmail" ref="form" class="contact-form" data-aos="fade-up" data-aos-delay="300">
