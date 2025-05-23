@@ -370,6 +370,36 @@ onMounted(() => {
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
+  @media (max-width: 768px) {
+  .main-title {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .contact-input,
+  .contact-form textarea {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .glass-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .grid-gallery {
+    grid-template-columns: 1fr !important;
+  }
+
+  .gallery-item {
+    border-radius: 12px;
+  }
+
+  .submit-btn {
+    font-size: 1rem;
+    padding: 0.8rem 1.2rem;
+  }
+}
+
 }
 
 
