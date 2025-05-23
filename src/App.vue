@@ -1,0 +1,62 @@
+<template>
+  <div>
+    <!-- ✅ 導覽列放這裡，全站共用 -->
+    <nav class="main-navbar">
+      <router-link to="/" exact-active-class="active">首頁</router-link>
+      <router-link to="/gallery" exact-active-class="active">作品集</router-link>
+      <router-link to="/contact" exact-active-class="active">預約拍攝</router-link>
+    </nav>
+
+    <!-- ✅ 頁面切換動畫 -->
+    <router-view v-slot="{ Component }">
+      <transition name="fade-slide" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+  </div>
+</template>
+
+<style>
+/* ✅ 動畫 */
+.fade-slide-enter-active, .fade-slide-leave-active {
+  transition: all 0.5s ease;
+}
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* ✅ 導覽列樣式（可根據你之前調整的覆蓋） */
+.main-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+}
+
+.main-navbar a {
+  color: white;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.main-navbar a:hover,
+.main-navbar .active {
+  color: #ffffffcc;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+}
+</style>
