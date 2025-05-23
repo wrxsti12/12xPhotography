@@ -144,7 +144,7 @@ function closeLightbox() {
 
 .gallery-item img {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
   transition: transform 0.4s ease;
 }
@@ -172,9 +172,6 @@ function closeLightbox() {
   font-family: 'Playfair Display', serif;
 }
 
-
-
-/* ✅ Lightbox modal */
 .lightbox {
   position: fixed;
   top: 0;
@@ -208,35 +205,37 @@ function closeLightbox() {
   font-size: 1.1rem;
   color: #fff;
   opacity: 0.85;
-  @media (max-width: 768px) {
+}
+
+@media (max-width: 768px) {
   .main-title {
     font-size: 2rem;
     text-align: center;
   }
 
-  .contact-input,
-  .contact-form textarea {
-    width: 100%;
+  .subtitle {
     font-size: 1rem;
-  }
-
-  .glass-card {
-    padding: 2rem 1.5rem;
+    padding: 0 1rem;
+    text-align: center;
   }
 
   .grid-gallery {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
   }
 
   .gallery-item {
     border-radius: 12px;
   }
-
-  .submit-btn {
-    font-size: 1rem;
-    padding: 0.8rem 1.2rem;
-  }
 }
 
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 1.5rem;
+  }
+
+  .overlay p {
+    font-size: 0.9rem;
+  }
 }
 </style>

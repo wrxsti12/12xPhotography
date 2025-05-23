@@ -197,8 +197,6 @@ onMounted(() => {
 </script>
 
 
-
-
 <style scoped>
 .contact {
   display: flex;
@@ -244,13 +242,11 @@ onMounted(() => {
   gap: 0.8rem;
 }
 
-
 .input-group {
   display: flex;
   flex-direction: column;
 }
 
-/* 所有 input 欄位共用樣式 */
 .contact-input {
   width: 100%;
   padding: 0.9rem 1rem;
@@ -264,7 +260,6 @@ onMounted(() => {
   transition: border 0.2s ease;
 }
 
-/* 錯誤時加上紅框樣式 */
 .input-error {
   border: 1px solid #ff4d4d;
   background-color: rgba(255, 77, 77, 0.05);
@@ -281,14 +276,14 @@ onMounted(() => {
   padding: 0.9rem 1rem;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(0, 0, 0, 0.3); /* ✅ 透明黑底 */
-  backdrop-filter: blur(8px);     /* ✅ 模糊玻璃效果 */
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: white;
   font-family: 'Cormorant Garamond', serif;
   font-size: 1rem;
   transition: all 0.3s ease;
-  appearance: none;               /* ✅ 移除預設樣式 */
+  appearance: none;
   background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="20" width="20" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
   background-repeat: no-repeat;
   background-position: right 1rem center;
@@ -319,21 +314,21 @@ onMounted(() => {
   font-weight: 600;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.3); /* ✅ 透明黑底 */
-  backdrop-filter: blur(10px);    /* ✅ 玻璃毛玻模糊 */
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Cormorant Garamond', serif;
   letter-spacing: 0.05rem;
-  box-shadow: 0 0 0 rgba(255, 255, 255, 0); /* 初始無光暈 */
+  box-shadow: 0 0 0 rgba(255, 255, 255, 0);
 }
 
 .submit-btn:hover {
-  background: rgba(255, 255, 255, 0.05);  /* ✅ 微白高亮玻璃 */
+  background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 0 18px rgba(255, 255, 255, 0.15); /* ✅ 光暈感 */
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.15);
 }
 
 .success-msg {
@@ -344,14 +339,13 @@ onMounted(() => {
   font-size: 1rem;
 }
 
-/* 穩定顯示的錯誤訊息樣式 */
 .error-text-stable {
   color: #ff8888;
   font-size: 0.85rem;
-  min-height: 0.5rem;     /* ✅ 更小的佔位空間 */
+  min-height: 0.5rem;
   line-height: 0.5rem;
-  margin-top: 0.2rem;     /* ✅ 與 input 間距 */
-  margin-bottom: -0.3rem; /* ✅ 精準壓回來距離 */
+  margin-top: 0.2rem;
+  margin-bottom: -0.3rem;
   opacity: 1;
   transition: opacity 0.2s ease;
 }
@@ -362,7 +356,7 @@ onMounted(() => {
 
 .page-intro {
   font-size: 1.05rem;
-  color: rgba(100, 98, 98, 0.65); /* ✅ 白色但有透明度 */
+  color: rgba(100, 98, 98, 0.65);
   font-family: 'Cormorant Garamond', serif;
   line-height: 1.6;
   margin-bottom: 2.5rem;
@@ -370,37 +364,38 @@ onMounted(() => {
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
-  @media (max-width: 768px) {
-  .main-title {
+}
+
+@media (max-width: 768px) {
+  :deep(.main-title) {
     font-size: 2rem;
     text-align: center;
   }
 
-  .contact-input,
-  .contact-form textarea {
+  :deep(.glass-card) {
+    padding: 2rem 1.5rem;
+  }
+
+  :deep(.contact-input),
+  :deep(.contact-form textarea) {
     width: 100%;
     font-size: 1rem;
   }
 
-  .glass-card {
-    padding: 2rem 1.5rem;
-  }
-
-  .grid-gallery {
-    grid-template-columns: 1fr !important;
-  }
-
-  .gallery-item {
-    border-radius: 12px;
-  }
-
-  .submit-btn {
+  :deep(.submit-btn) {
     font-size: 1rem;
     padding: 0.8rem 1.2rem;
   }
 }
 
+@media (max-width: 480px) {
+  :deep(.main-title) {
+    font-size: 1.5rem;
+  }
+
+  :deep(.submit-btn) {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
 }
-
-
 </style>
