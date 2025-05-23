@@ -20,14 +20,11 @@
         攝 影 預 約 表 單
       </p>
 
-      <!-- 品牌理念文字區塊 -->
-      <div class="brand-philosophy" style="margin-top: 2rem; max-width: 720px; margin-left: auto; margin-right: auto; text-align: center;" data-aos="fade-up" data-aos-delay="600">
-        <p style="font-size: 1.1rem; line-height: 2.2; color: rgba(255,255,255,0.9); font-family: 'Cormorant Garamond', serif; letter-spacing: 0.03rem;">
-          <strong>ONE2FRAME</strong>，來自於「One to Frame」的概念 <br />
-          代表一個人走向創作者的旅程。<br />
-
-        </p>
-      </div>
+      <!-- 品牌理念文字區塊（質感分行） -->
+<div class="brand-philosophy-text" data-aos="fade-up" data-aos-delay="600">
+  <span><strong>ONE2FRAME</strong>，來自於「One to Frame」的概念。</span>
+  <span>代表一個人走向創作者的旅程。</span>
+</div>
 
       
 
