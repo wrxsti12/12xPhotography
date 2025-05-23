@@ -97,6 +97,7 @@ function scrollToContact() {
   text-align: center;
   word-break: keep-all;
   margin-bottom: 1.5rem;
+  white-space: nowrap;
 }
 
 .subtitle {
@@ -173,11 +174,43 @@ function scrollToContact() {
   margin-bottom: 1.5rem;
 }
 
+.brand-philosophy {
+  margin-top: 2rem;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  padding: 0 1rem;
+}
+
 
 @media (max-width: 768px) {
   .main-title {
     font-size: 2rem;
-    letter-spacing: 0.3rem;
+    letter-spacing: 0.2rem;
+    white-space: normal; /* ✅手機上允許換行 */
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    padding: 0 1.2rem;
+  }
+
+  .hero-title {
+    font-size: 1.2rem;
+    line-height: 1.6;
+  }
+
+  .brand-philosophy {
+    font-size: 1rem;
+    padding: 0 1rem;
+    line-height: 1.8;
+  }
+
+  .cta-btn {
+    font-size: 1rem;
+    padding: 0.6rem 1.5rem;
   }
 }
+
 </style>
