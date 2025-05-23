@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import Gallery from './views/Gallery.vue'
 import Contact from './views/Contact.vue'
 
+
 const routes = [
   { path: '/', component: Home },
   { path: '/gallery', component: Gallery },
@@ -13,6 +14,11 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title || 'ONE2FRAME'
+  next()
 })
 
 export default router

@@ -55,6 +55,46 @@ function scrollToContact() {
 
 <style scoped>
 
+.brand-philosophy-text {
+  font-size: 1.1rem;
+  line-height: 2;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 0.03rem;
+  max-width: 720px;
+  margin: 2rem auto 0;
+  text-align: center;
+  padding: 0 1.2rem;
+}
+
+.brand-philosophy-text span {
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+@media (max-width: 768px) {
+  .brand-philosophy-text {
+    font-size: 1rem;
+    line-height: 1.85;
+    padding: 0 1.2rem;
+  }
+
+  .brand-philosophy-text span {
+    margin-bottom: 0.7rem;
+  }
+}
+.brand-philosophy-text {
+  font-size: 1.1rem;
+  line-height: 2;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 0.03rem;
+  max-width: 720px;
+  margin: 2rem auto 2.8rem; /* ✅ 下方加大間距 */
+  text-align: center;
+  padding: 0 1.2rem;
+}
+
 .home {
   height: 100vh;
   display: flex;
@@ -198,10 +238,11 @@ function scrollToContact() {
     line-height: 1.6;
   }
 
-  .brand-philosophy {
+  .brand-philosophy-text {
     font-size: 1rem;
-    padding: 0 1rem;
-    line-height: 1.8;
+    line-height: 1.85;
+    padding: 0 1.2rem;
+    margin-bottom: 2.5rem; /* ✅ 手機下間距也拉開 */
   }
 
   .cta-btn {
