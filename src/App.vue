@@ -39,6 +39,12 @@
     padding: 0 1rem;
   }
 
+  @media (max-width: 768px) {
+  .app-container {
+    padding: 2rem 1rem;
+  }
+}
+
   .subtitle {
     font-size: 1.1rem;
     letter-spacing: 0.15rem;
@@ -99,5 +105,15 @@
 .main-navbar .active {
   color: #ffffffcc;
   border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.main-title {
+  font-size: 3.5rem; /* 電腦上帥 */
+}
+
+@media (max-width: 768px) {
+  .main-title {
+    font-size: 1.8rem; /* 手機上應該要降下來 */
+  }
 }
 </style>

@@ -366,36 +366,52 @@ onMounted(() => {
   margin-right: auto;
 }
 
+/* ✅ RWD 補強：768px 以下 */
 @media (max-width: 768px) {
-  :deep(.main-title) {
-    font-size: 2rem;
-    text-align: center;
+  .glass-card {
+    padding: 2rem 1rem;
   }
 
-  :deep(.glass-card) {
-    padding: 2rem 1.5rem;
+  .contact {
+    padding: 2rem 1rem;
   }
 
-  :deep(.contact-input),
-  :deep(.contact-form textarea) {
-    width: 100%;
+  .contact-input,
+  .contact-form textarea,
+  .contact-form select {
     font-size: 1rem;
+    padding: 0.8rem 1rem;
   }
 
-  :deep(.submit-btn) {
+  .submit-btn {
     font-size: 1rem;
     padding: 0.8rem 1.2rem;
   }
+
+  .success-msg {
+    font-size: 0.95rem;
+  }
 }
 
+/* ✅ 更小手機尺寸補強：480px 以下 */
 @media (max-width: 480px) {
-  :deep(.main-title) {
-    font-size: 1.5rem;
+  .glass-card {
+    padding: 1.5rem 1rem;
   }
 
-  :deep(.submit-btn) {
-    font-size: 0.9rem;
+  .contact {
+    padding: 1.5rem 1rem;
+  }
+
+  .submit-btn {
+    font-size: 0.95rem;
     padding: 0.6rem 1rem;
+  }
+
+  .contact-input,
+  .contact-form textarea,
+  .contact-form select {
+    font-size: 0.95rem;
   }
 }
 </style>
