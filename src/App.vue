@@ -30,6 +30,47 @@
   transform: translateY(-20px);
 }
 
+@media (max-width: 768px) {
+  .main-title {
+    font-size: 1.8rem;
+    letter-spacing: 0.3rem;
+    line-height: 1.4;
+    word-break: break-word; /* ✅ 防止超長文字被切一半 */
+    padding: 0 1rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    letter-spacing: 0.15rem;
+    padding: 0 1.2rem;
+    text-align: center;
+  }
+
+  .hero-content {
+    padding: 0 1.5rem;
+  }
+
+  .brand-philosophy {
+    font-size: 1rem;
+    line-height: 1.8;
+    padding: 0 1.5rem;
+  }
+
+  .cta-btn {
+    font-size: 1rem;
+    padding: 0.7rem 1.4rem;
+  }
+
+  .gallery-item img {
+    object-fit: contain;
+  }
+
+  .grid-gallery {
+    padding: 0 1rem;
+  }
+}
+
+
 /* ✅ 導覽列樣式（可根據你之前調整的覆蓋） */
 .main-navbar {
   position: fixed;
