@@ -24,6 +24,7 @@
 <div class="brand-philosophy-text" data-aos="fade-up" data-aos-delay="600">
   <span><strong>ONE2FRAME</strong>，來自於「One to Frame」的概念。</span>
   <span>代表一個人走向創作者的旅程。</span>
+
 </div>
 
       
