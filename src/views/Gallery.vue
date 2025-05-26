@@ -9,21 +9,70 @@
       </p>
     </div>
 
-    <div class="grid-gallery mobile-layout">
-      <div
-        v-for="(item, index) in images"
-        :key="index"
-        class="gallery-item"
-        @click="openLightbox(item)"
-      >
-        <div class="image-wrapper">
-          <img :src="item.src" :alt="item.name" />
-        </div>
-        <div class="overlay">
-          <p>{{ item.name }}</p>
+<div class="gallery-section" data-aos="fade-up" data-aos-delay="700">
+  <hr class="section-divider" />
+      <h2 class="category-title">動態攝影</h2>
+      <div class="grid-gallery">
+        <div
+          v-for="(item, index) in rollingImages"
+          :key="'rolling-' + index"
+          class="gallery-item"
+          @click="openLightbox(item)"
+        >
+          <div class="image-wrapper">
+            <img :src="item.src" :alt="item.name" loading="lazy" />
+          </div>
+          <div class="overlay">
+            <p>{{ item.name }}</p>
+          </div>
         </div>
       </div>
     </div>
+
+
+    <div class="gallery-section" data-aos="fade-up" data-aos-delay="500">
+      <hr class="section-divider" />
+      <h2 class="category-title">靜態人車</h2>
+      <div class="grid-gallery">
+        <div
+          v-for="(item, index) in staticImages"
+          :key="'static-' + index"
+          class="gallery-item"
+          @click="openLightbox(item)"
+        >
+          <div class="image-wrapper">
+            <img :src="item.src" :alt="item.name" loading="lazy" />
+          </div>
+          <div class="overlay">
+            <p>{{ item.name }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+
+    <div class="gallery-section" data-aos="fade-up" data-aos-delay="500">
+      <hr class="section-divider" />
+      <h2 class="category-title">靜態車照</h2>
+      <div class="grid-gallery">
+        <div
+          v-for="(item, index) in carImages"
+          :key="'car-' + index"
+          class="gallery-item"
+          @click="openLightbox(item)"
+        >
+          <div class="image-wrapper">
+            <img :src="item.src" :alt="item.name" loading="lazy" />
+          </div>
+          <div class="overlay">
+            <p>{{ item.name }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
 
     <!-- Lightbox Modal -->
     <div v-if="lightboxVisible" class="lightbox" @click.self="closeLightbox">
@@ -36,19 +85,37 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import marbleBg from '../assets/marble.jpg'
 
 const images = [
-  { src: '/gallery/static-1.jpg' },
-  { src: '/gallery/static-2.jpg' },
-  { src: '/gallery/static-3.jpg'},
-  { src: '/gallery/static-4.jpg' },
-  { src: '/gallery/static-5.jpg' },
-  { src: '/gallery/static-6.jpg' },
-  { src: '/gallery/static-7.jpg' },
-  { src: '/gallery/static-8.jpg' }
+  { src: '/gallery/rolling-1.webp', name: 'Aprilia RS660', category: 'rolling' },
+  { src: '/gallery/rolling-2.webp', name: 'Yamaha R1', category: 'rolling' },
+  { src: '/gallery/rolling-3.webp', name: 'Kawasaki NinJa400', category: 'rolling' },
+  { src: '/gallery/rolling-4.webp', name: 'Kawasaki ZX-4RR', category: 'rolling' },
+  { src: '/gallery/rolling-5.webp', name: 'Yamaha MT-09', category: 'rolling' },
+  { src: '/gallery/rolling-6.webp', name: 'Ducati Panigale V4 SP2', category: 'rolling' },
+  { src: '/gallery/rolling-7.webp', name: 'Yamaha R1', category: 'rolling' },
+  { src: '/gallery/rolling-8.webp', name: 'Yamaha R15', category: 'rolling' },
+
+  { src: '/gallery/car-1.webp', category: 'car' },
+  { src: '/gallery/car-2.webp', category: 'car' },
+  { src: '/gallery/car-3.webp', category: 'car' },
+  { src: '/gallery/car-4.webp', category: 'car' },
+
+  { src: '/gallery/static-1.webp', category: 'static' },
+  { src: '/gallery/static-2.webp', category: 'static' },
+  { src: '/gallery/static-3.webp', category: 'static' },
+  { src: '/gallery/static-4.webp', category: 'static' },
+  { src: '/gallery/static-5.webp', category: 'static' },
+  { src: '/gallery/static-6.webp', category: 'static' },
+  { src: '/gallery/static-7.webp', category: 'static' },
+  { src: '/gallery/static-8.webp', category: 'static' },
 ]
+
+const carImages = computed(() => images.filter(img => img.category === 'car'))
+const staticImages = computed(() => images.filter(img => img.category === 'static'))
+const rollingImages = computed(() => images.filter(img => img.category === 'rolling'))
 
 const lightboxVisible = ref(false)
 const currentImage = ref({})
@@ -63,7 +130,23 @@ function closeLightbox() {
 }
 </script>
 
+
 <style scoped>
+
+.section-divider {
+  border: none;
+  height: 1px;
+  margin: 4rem auto; /* 上下距離 */
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  width: 60%;
+  max-width: 700px;
+}
+
 .gallery {
   min-height: 100vh;
   display: flex;
