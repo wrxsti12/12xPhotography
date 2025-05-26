@@ -4,7 +4,10 @@
     <ul class="navbar-links">
       <li><router-link to="/">首頁</router-link></li>
       <li><router-link to="/gallery">作品集</router-link></li>
+      <li><router-link to="/quotation" class="nav-link">報價單</router-link></li>
       <li><router-link to="/contact">預約拍攝</router-link></li>
+
+      
     </ul>
   </div>
 </nav>

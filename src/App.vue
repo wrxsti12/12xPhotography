@@ -4,7 +4,10 @@
     <nav class="main-navbar">
       <router-link to="/" exact-active-class="active">首頁</router-link>
       <router-link to="/gallery" exact-active-class="active">作品集</router-link>
+      <router-link to="/quotation" class="nav-link">報價單</router-link>
       <router-link to="/contact" exact-active-class="active">預約拍攝</router-link>
+      
+
     </nav>
 
     <!-- ✅ 頁面切換動畫 -->
@@ -30,20 +33,52 @@
   transform: translateY(-20px);
 }
 
+/* ✅ 導覽列樣式 */
+.main-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+}
+.main-navbar a {
+  color: white;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.main-navbar a:hover,
+.main-navbar .active {
+  color: #ffffffcc;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+/* ✅ 電腦預設主標題樣式 */
+.main-title {
+  font-size: 3.5rem;
+  letter-spacing: 0.6rem;
+  line-height: 1.4;
+  font-family: 'Playfair Display', serif;
+  text-align: center;
+  word-break: break-word;
+  margin-bottom: 1.5rem;
+}
+
+/* ✅ RWD 手機樣式 */
 @media (max-width: 768px) {
   .main-title {
     font-size: 1.8rem;
     letter-spacing: 0.3rem;
-    line-height: 1.4;
-    word-break: break-word; /* ✅ 防止超長文字被切一半 */
     padding: 0 1rem;
   }
-
-  @media (max-width: 768px) {
-  .app-container {
-    padding: 2rem 1rem;
-  }
-}
 
   .subtitle {
     font-size: 1.1rem;
@@ -74,46 +109,12 @@
   .grid-gallery {
     padding: 0 1rem;
   }
-}
 
-
-/* ✅ 導覽列樣式（可根據你之前調整的覆蓋） */
-.main-navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-}
-
-.main-navbar a {
-  color: white;
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 500;
-  font-size: 1.1rem;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-.main-navbar a:hover,
-.main-navbar .active {
-  color: #ffffffcc;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.4);
-}
-
-.main-title {
-  font-size: 3.5rem; /* 電腦上帥 */
-}
-
-@media (max-width: 768px) {
-  .main-title {
-    font-size: 1.8rem; /* 手機上應該要降下來 */
+  .app-container {
+    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 }
 </style>
+

@@ -109,24 +109,9 @@
           📩 預約已送出，請留意訊息通知！我會私訊與您確認詳細時間<p></p>
         </p>
       </form>
-
-      <footer class="page-footer" data-aos="fade-up" data-aos-delay="1000">
-        © 2025 Pinhua Photography | 靜態 × Rolling 攝影
-      </footer>
-    <div class="price-text" data-aos="fade-up" data-aos-delay="600">
-        <p>📌 靜態攝影（精修+精修合成）<br />
-        10-15 張 → $1500<br />
-        25 張 → $2000</p>
-
-        <p>📌 動態 Rolling Shot（精修+精修合成）<br />
-        10-15 張→ $2500</p>
-
-        <p>📩 優惠方案<br />
-        ‼️ 靜態+動態一起拍攝，9折優惠<br />
-        ‼️ 曾合作車友邀約，再額外折扣 $100<br />
-        ‼️ 服務桃園以北區域，桃園地區酌收200元車馬費</p>
-      </div>
     </div>
+
+    
   </section>
 </template>
 
