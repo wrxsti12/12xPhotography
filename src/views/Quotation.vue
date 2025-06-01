@@ -8,56 +8,76 @@
 
       <div class="price-grid">
         <div
-  v-for="(plan, index) in plans"
-  :key="index"
-  :class="['price-box', { selected: selectedPlan === index }]"
-  @click="selectPlan(index)"
-  data-aos="fade-up"
-  :data-aos-delay="300 + index * 100"
->
-
+          v-for="(plan, index) in plans"
+          :key="index"
+          :class="['price-box', { selected: selectedPlan === index }]"
+          @click="selectPlan(index)"
+          data-aos="fade-up"
+          :data-aos-delay="300 + index * 100"
+        >
           <h2>{{ plan.title }}</h2>
           <p>{{ plan.desc }}</p>
           <h3>{{ plan.price }}</h3>
         </div>
       </div>
 
-      <router-link to="/contact" class="cta-button" data-aos="fade-up" data-aos-delay="700">
+      <!-- ✅ 修改：帶方案名稱跳轉 -->
+      <button
+        class="cta-button"
+        data-aos="fade-up"
+        data-aos-delay="700"
+        @click="goToContactWithPlan"
+        :disabled="selectedPlan === null"
+      >
         我要預約
-      </router-link>
+      </button>
     </div>
   </section>
 </template>
 
-
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import marbleBg from '../assets/marble.jpg'
 
 const selectedPlan = ref(null)
-
-const selectPlan = (index) => {
-  selectedPlan.value = index
-}
+const router = useRouter()
 
 const plans = [
   { title: 'Lite', desc: '適合個人與入門專案', price: '$3,000 起' },
   { title: 'Pro', desc: '標準Rolling Shot服務', price: '$5,000 起' },
   { title: 'Elite', desc: '專屬客製拍攝計畫', price: '$10,000 起' }
 ]
+
+const selectPlan = (index) => {
+  selectedPlan.value = index
+}
+
+// ✅ 新增：跳轉並帶上方案名稱作為 URL query
+const goToContactWithPlan = () => {
+  if (selectedPlan.value !== null) {
+    const selectedPlanName = plans[selectedPlan.value].title
+    router.push({ path: '/contact', query: { plan: selectedPlanName } })
+  }
+}
 </script>
 
 
 <style scoped>
 .quotation {
+  width: 100vw;
   min-height: 100vh;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   padding: 80px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-x: hidden;
+  margin: 0;
 }
+
 
 .glass-card {
   max-width: 1100px;
@@ -154,4 +174,10 @@ const plans = [
   color: black;
   transform: scale(1.05);
 }
+
+.cta-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 </style>

@@ -1,19 +1,13 @@
 <template>
   <section class="contact" :style="{ backgroundImage: `url(${marbleBg})` }">
     <div class="glass-card" data-aos="fade-up" data-aos-duration="1000">
-    <div class="price-text" data-aos="fade-up" data-aos-duration="1000"></div>
-      <h1 class="main-title" data-aos="fade-up" data-aos-delay="100">
-        立即預約拍攝
-      </h1>
-
-      <!-- 品牌理念說明 -->
-      <div class="brand-philosophy-text" data-aos="fade-up" data-aos-delay="200">
-        
-
+      <div class="price-text" v-if="selectedPlan" data-aos="fade-up" data-aos-delay="100">
+        <p>你選擇的方案：<strong>{{ selectedPlan }}</strong></p>
       </div>
+      <h1 class="main-title" data-aos="fade-up" data-aos-delay="100">立即預約拍攝</h1>
+      <div class="brand-philosophy-text" data-aos="fade-up" data-aos-delay="200"></div>
 
       <form @submit.prevent="sendEmail" ref="form" class="contact-form" data-aos="fade-up" data-aos-delay="300">
-        <!-- 👤 使用者姓名欄位 -->
         <div class="input-group" data-aos="fade-up" data-aos-delay="150">
           <input
             id="userName"
@@ -27,7 +21,6 @@
           />
         </div>
 
-        <!-- 📱 IG 名稱輸入區 -->
         <div class="input-group" data-aos="fade-up" data-aos-delay="200">
           <input
             id="userIG"
@@ -44,7 +37,6 @@
           <p class="error-text-stable">{{ errorMessage }}</p>
         </div>
 
-        <!-- 備註區塊 -->
         <textarea
           v-model="userNote"
           name="message"
@@ -53,7 +45,6 @@
           data-aos-delay="500"
         ></textarea>
 
-        <!-- 拍攝需求 -->
         <select
           v-model="shootType"
           name="shoot_type"
@@ -68,7 +59,6 @@
           <option>Reels短片紀錄</option>
         </select>
 
-        <!-- 拍攝日期欄位（只給選幾月幾號） -->
         <input
           v-model="shootDate"
           type="date"
@@ -80,7 +70,6 @@
           data-aos-delay="400"
         />
 
-        <!-- 拍攝時間欄位（幾點幾分） -->
         <input
           v-model="shootClock"
           type="time"
@@ -91,46 +80,65 @@
           data-aos-delay="410"
         />
 
-        <!-- 隱藏的完整時間欄位（給 EmailJS 傳資料） -->
         <input
           type="hidden"
           name="shoot_full_time"
           :value="shootFullTime"
         />
 
-        <!-- 送出按鈕 -->
+        <input
+          v-if="selectedPlan"
+          type="hidden"
+          name="plan"
+          :value="selectedPlan"
+        />
+
         <button type="submit" class="submit-btn" data-aos="zoom-in" data-aos-delay="800">
           提交預約
         </button>
-        <p></p>
 
-        <!-- 成功訊息 -->
         <p v-if="done" class="success-msg" data-aos="fade-up" data-aos-delay="1000">
-          📩 預約已送出，請留意訊息通知！我會私訊與您確認詳細時間<p></p>
+          📩 預約已送出，請留意訊息通知！我會私訊與您確認詳細時間
         </p>
       </form>
     </div>
-
-    
   </section>
 </template>
 
-
-
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import emailjs from '@emailjs/browser'
 import marbleBg from '../assets/marble.jpg'
 
 const form = ref(null)
 const done = ref(false)
-
 const userName = ref('')
 const userIG = ref('')
 const userNote = ref('')
 const shootType = ref('')
 const shootDate = ref('')
 const shootClock = ref('')
+const route = useRoute()
+
+const selectedPlan = ref('')
+
+onMounted(() => {
+  const planParam = route.query.plan
+  if (planParam) {
+    selectedPlan.value = decodeURIComponent(planParam)
+    if (!userNote.value.includes(planParam)) {
+      userNote.value = `【方案】${planParam}\n` + userNote.value
+    }
+  }
+
+  if (userIG.value === '') {
+    isValidIG.value = true
+    showIGError.value = false
+  } else {
+    handleIGInput()
+  }
+})
 
 const shootFullTime = computed(() => {
   if (!shootDate.value || !shootClock.value) return ''
@@ -153,24 +161,14 @@ function handleIGInput() {
 
 function sendEmail() {
   handleIGInput()
-
   if (!isValidIG.value) {
     alert('請輸入正確的 IG 名稱')
     return
   }
 
-  console.log('📤 準備發送表單...')
-  console.log('🧾 姓名：', userName.value)
-  console.log('🧾 IG：', userIG.value)
-  console.log('🧾 拍攝時間：', shootClock.value)
-  console.log('🧾 合併時間：', shootFullTime.value)
-
   try {
     const fullTimeInput = form.value.querySelector('input[name="shoot_full_time"]')
-    if (fullTimeInput) {
-      fullTimeInput.value = shootFullTime.value
-      console.log('✅ 手動補值成功：', fullTimeInput.value)
-    }
+    if (fullTimeInput) fullTimeInput.value = shootFullTime.value
 
     emailjs.sendForm(
       'service_sutp5s9',
@@ -178,28 +176,16 @@ function sendEmail() {
       form.value,
       '3DH3YZGxSTMbs0gwQ'
     ).then(() => {
-      console.log('✅ EmailJS 成功送出')
       done.value = true
     }).catch((error) => {
-      console.error('❌ EmailJS 發送失敗：', error)
       alert('發送失敗：' + error.text)
     })
   } catch (err) {
-    console.error('❌ 重大錯誤：', err)
     alert('提交表單發生錯誤，請稍後再試')
   }
 }
 
 const today = new Date().toISOString().split('T')[0]
-
-onMounted(() => {
-  if (userIG.value === '') {
-    isValidIG.value = true
-    showIGError.value = false
-  } else {
-    handleIGInput()
-  }
-})
 </script>
 
 
@@ -209,6 +195,8 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  width: 100vw;
+  margin: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -218,6 +206,7 @@ onMounted(() => {
   text-align: center;
   overflow: hidden;
 }
+
 
 .contact::before {
   content: '';
@@ -443,4 +432,6 @@ onMounted(() => {
   white-space: pre-line;
 }
 }
+
+
 </style>

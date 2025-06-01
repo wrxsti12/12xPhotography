@@ -3,7 +3,6 @@
     <!-- ✅ 導覽列放這裡，全站共用 -->
     <nav class="main-navbar">
       <router-link to="/" exact-active-class="active">首頁</router-link>
-      <router-link to="/gallery" exact-active-class="active">作品集</router-link>
       <router-link to="/quotation" class="nav-link">報價單</router-link>
       <router-link to="/contact" exact-active-class="active">預約拍攝</router-link>
       
@@ -115,6 +114,21 @@
     max-width: 1200px;
     margin: 0 auto;
   }
+
+  /* 全域基礎設定，可放在 main.css 或 App.vue 的 <style> */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  overflow-x: hidden;
+  background-color: #000; /* 預防背景貼圖未載入時閃白 */
+}
+
+#app {
+  width: 100vw;
+  overflow-x: hidden;
+}
+
 }
 </style>
 
