@@ -40,9 +40,11 @@
         <textarea
           v-model="userNote"
           name="message"
-          placeholder="車種 ?  ( Ex: Yamaha R1 )"
+          readonly
+          class="contact-input"
+          placeholder="【方案】將自動填入"
           data-aos="fade-up"
-          data-aos-delay="500"
+          data-aos-delay="250"
         ></textarea>
 
         <select
@@ -80,18 +82,8 @@
           data-aos-delay="410"
         />
 
-        <input
-          type="hidden"
-          name="shoot_full_time"
-          :value="shootFullTime"
-        />
-
-        <input
-          v-if="selectedPlan"
-          type="hidden"
-          name="plan"
-          :value="selectedPlan"
-        />
+        <input type="hidden" name="shoot_full_time" :value="shootFullTime" />
+        <input v-if="selectedPlan" type="hidden" name="plan" :value="selectedPlan" />
 
         <button type="submit" class="submit-btn" data-aos="zoom-in" data-aos-delay="800">
           提交預約
@@ -126,12 +118,35 @@ const selectedPlan = ref('')
 onMounted(() => {
   const planParam = route.query.plan
   if (planParam) {
-    selectedPlan.value = decodeURIComponent(planParam)
-    if (!userNote.value.includes(planParam)) {
-      userNote.value = `【方案】${planParam}\n` + userNote.value
+    const decodedPlan = decodeURIComponent(planParam)
+    selectedPlan.value = decodedPlan
+
+    // 自動寫入 userNote（避免覆蓋使用者手動輸入）
+    if (userNote.value === '') {
+      userNote.value = `【方案】${decodedPlan}`
+    } else if (!userNote.value.includes(decodedPlan)) {
+      userNote.value = `【方案】${decodedPlan}\n${userNote.value}`
+    }
+
+    // 自動同步拍攝類型欄位（shootType）
+    if (shootType.value === '') {
+      switch (decodedPlan) {
+        case '靜態攝影':
+          shootType.value = '靜態攝影'
+          break
+        case '動態攝影':
+          shootType.value = '動態Rolling'
+          break
+        case 'Reels短片拍攝':
+          shootType.value = 'Reels短片紀錄'
+          break
+        default:
+          shootType.value = decodedPlan
+      }
     }
   }
 
+  // IG 檢查邏輯照常保留
   if (userIG.value === '') {
     isValidIG.value = true
     showIGError.value = false
@@ -139,6 +154,7 @@ onMounted(() => {
     handleIGInput()
   }
 })
+
 
 const shootFullTime = computed(() => {
   if (!shootDate.value || !shootClock.value) return ''
@@ -187,6 +203,7 @@ function sendEmail() {
 
 const today = new Date().toISOString().split('T')[0]
 </script>
+
 
 
 <style scoped>

@@ -8,26 +8,38 @@
 
       <div class="price-grid">
         <div
-          v-for="(plan, index) in plans"
-          :key="index"
-          :class="['price-box', { selected: selectedPlan === index }]"
-          @click="selectPlan(index)"
-          data-aos="fade-up"
-          :data-aos-delay="300 + index * 100"
-        >
-          <h2>{{ plan.title }}</h2>
-          <p>{{ plan.desc }}</p>
-          <h3>{{ plan.price }}</h3>
-        </div>
+  v-for="(plan, index) in plans"
+  :key="plan.title + '-' + index"
+  :class="['price-box', { selected: selectedPlanIndex === index, bonus: plan.isBonus }]"
+  @click="handleSelect(index)"
+  data-aos="fade-up"
+  :data-aos-delay="300 + index * 100"
+  v-once
+>
+  <div class="checkmark" v-if="selectedPlanIndex === index">✔</div>
+  <h2>{{ plan.title }}</h2>
+  <p>{{ plan.desc }}</p>
+  <h3 v-if="plan.price">{{ plan.price }}</h3>
+</div>
+
       </div>
 
-      <!-- ✅ 修改：帶方案名稱跳轉 -->
+      <!-- ✅ 引導提示 -->
+      <p v-if="selectedPlanIndex === null" class="tip-text">
+        請先選擇一個方案才能預約
+      </p>
+
+      <p v-if="selectedPlanIndex !== null" class="selection-label" data-aos="fade-in">
+  ✅ 你已選擇方案：<strong>{{ plans[selectedPlanIndex].title }}</strong>
+</p>
+
+
       <button
         class="cta-button"
+        @click="goToContactWithPlan"
+        :disabled="selectedPlanIndex === null"
         data-aos="fade-up"
         data-aos-delay="700"
-        @click="goToContactWithPlan"
-        :disabled="selectedPlan === null"
       >
         我要預約
       </button>
@@ -35,32 +47,47 @@
   </section>
 </template>
 
+
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import marbleBg from '../assets/marble.jpg'
 
-const selectedPlan = ref(null)
 const router = useRouter()
 
+const selectedPlanIndex = ref(null)
+
 const plans = [
-  { title: 'Lite', desc: '適合個人與入門專案', price: '$3,000 起' },
-  { title: 'Pro', desc: '標準Rolling Shot服務', price: '$5,000 起' },
-  { title: 'Elite', desc: '專屬客製拍攝計畫', price: '$10,000 起' }
+  { title: '靜態攝影', desc: '適合個人與入門專案', price: '$1,500 - $2,000' },
+  { title: '動態攝影', desc: '標準 Rolling Shot 服務', price: '$2,500' },
+  { title: 'Reels短片拍攝', desc: '專屬客製拍攝計畫', price: '$10,000 起' },
+  {
+    title: '📩 優惠方案',
+    desc: '靜態＋動態同日拍攝享 9 折優惠\n曾合作車友另享折扣 $200',
+    price: '',
+    isBonus: true
+  }
 ]
 
-const selectPlan = (index) => {
-  selectedPlan.value = index
-}
-
-// ✅ 新增：跳轉並帶上方案名稱作為 URL query
-const goToContactWithPlan = () => {
-  if (selectedPlan.value !== null) {
-    const selectedPlanName = plans[selectedPlan.value].title
-    router.push({ path: '/contact', query: { plan: selectedPlanName } })
+// 點擊方案（排除 bonus 類型）
+function handleSelect(index) {
+  const plan = plans[index]
+  if (!plan.isBonus) {
+    selectedPlanIndex.value = index
   }
 }
+
+
+// 導向 /contact 並帶上方案
+function goToContactWithPlan() {
+  const selected = selectedPlanIndex.value
+  if (selected !== null && !plans[selected].isBonus) {
+    router.push({ path: '/contact', query: { plan: plans[selected].title } })
+  }
+}
+
 </script>
+
 
 
 <style scoped>
@@ -77,7 +104,6 @@ const goToContactWithPlan = () => {
   overflow-x: hidden;
   margin: 0;
 }
-
 
 .glass-card {
   max-width: 1100px;
@@ -106,12 +132,13 @@ const goToContactWithPlan = () => {
 
 .price-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* ✅ 保證橫向排列 */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 32px;
   margin-bottom: 40px;
 }
 
 .price-box {
+  position: relative;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 24px;
@@ -129,17 +156,42 @@ const goToContactWithPlan = () => {
   background: rgba(255, 255, 255, 0.12);
 }
 
-.price-box.highlight {
-  border: 2px solid #ffffffcc;
-  background: rgba(255, 255, 255, 0.15);
+.price-box.selected {
+  transform: scale(1.07);
+  border: 2px solid #00ffc8;
+  background: rgba(0, 255, 200, 0.08);
+  box-shadow: 0 0 18px rgba(0, 255, 200, 0.3);
+  z-index: 2;
 }
 
-.price-box.selected {
-  border: 2px solid #ffffffcc;
-  background: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 8px 32px rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
-  z-index: 1;
+/* ✅ 選中 ✔ checkmark */
+.checkmark {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 28px;
+  height: 28px;
+  background-color: #00c896;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 12px rgba(0, 200, 150, 0.5);
+  animation: popIn 0.4s ease-out;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .price-box h2 {
@@ -164,9 +216,9 @@ const goToContactWithPlan = () => {
   border: 1px solid #ffffff55;
   color: white;
   border-radius: 12px;
-  text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .cta-button:hover {
@@ -178,6 +230,53 @@ const goToContactWithPlan = () => {
 .cta-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.tip-text {
+  font-size: 0.95rem;
+  margin-top: -12px;
+  margin-bottom: 24px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ✅ 新增：選擇提示文字 */
+.selection-label {
+  font-size: 1rem;
+  margin-top: -12px;
+  margin-bottom: 24px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.price-box.bonus {
+  cursor: default;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.price-box.bonus h2 {
+  font-size: 18px;
+}
+
+.price-box.bonus p {
+  white-space: pre-line;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 </style>

@@ -31,14 +31,15 @@
 
       <!-- CTA按鈕 -->
       <router-link
-        to="/contact"
-        class="cta-btn"
-        data-aos="zoom-in"
-        data-aos-delay="800"
-        data-aos-duration="800"
-      >
-        立即預約拍攝
-      </router-link>
+  to="/quotation"
+  class="cta-btn"
+  data-aos="zoom-in"
+  data-aos-delay="800"
+  data-aos-duration="800"
+>
+  查看報價單
+</router-link>
+
     </div>
   </section>
 </template>
@@ -97,6 +98,7 @@ function scrollToContact() {
 }
 
 .home {
+  width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -107,7 +109,10 @@ function scrollToContact() {
   position: relative;
   color: white;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
+
 
 .home::before {
   content: '';
