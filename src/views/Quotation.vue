@@ -74,12 +74,12 @@ const plans = [
   {
     title: '靜態攝影',
     desc: '適合個人與入門專案',
-    priceLines: ['15 張｜$1,500', '25 張｜$2,500']
+    priceLines: ['15 張｜$2,000', '25 張｜$3,000']
   },
   {
     title: '動態攝影',
     desc: '標準 Rolling Shot 服務',
-    priceLines: ['10-15 張｜$2,500']
+    priceLines: ['10-15 張｜$3,000']
   },
   {
     title: 'Reels短片拍攝',
