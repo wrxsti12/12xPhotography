@@ -139,9 +139,14 @@ function goToContactWithPlan() {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
   text-align: center;
   color: white;
-  overflow: visible; /* ✅ 修正手機裝置滑不出按鈕 bug */
   box-sizing: border-box;
+
+  /* ✅ 修正關鍵：讓內容在手機可滾動顯示 */
+  max-height: 90vh;
+  overflow-y: auto;
+  padding-bottom: 96px; /* 給 "立即預約" 空間 */
 }
+
 
 .main-title {
   font-size: 42px;
