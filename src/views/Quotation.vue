@@ -10,14 +10,18 @@
       <!-- 方案區 -->
       <div class="price-grid">
         <div
-          v-for="(plan, index) in plans"
-          :key="plan.title + '-' + index"
-          :class="['price-box', { selected: selectedPlanIndex === index, bonus: plan.isBonus }]"
-          @click="handleSelect(index)"
-          data-aos="fade-up"
-          :data-aos-delay="300 + index * 100"
-          v-once
-        >
+  v-for="(plan, index) in plans"
+  :key="plan.title + '-' + index"
+  :class="[
+    'price-box',
+    'aos-init',
+    'aos-animate',
+    { selected: selectedPlanIndex === index, bonus: plan.isBonus }
+  ]"
+  @click="handleSelect(index)"
+  data-aos="fade-up"
+  :data-aos-delay="300 + index * 100"
+>
           <div class="checkmark" v-if="selectedPlanIndex === index && !plan.isBonus">✔</div>
           <h2>{{ plan.title }}</h2>
           <p>{{ plan.desc }}</p>
@@ -65,6 +69,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import marbleBg from '../assets/marble.jpg'
+
 
 const router = useRouter()
 
