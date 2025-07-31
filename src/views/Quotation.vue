@@ -16,7 +16,7 @@
           @click="handleSelect(index)"
           data-aos="fade-up"
           :data-aos-delay="300 + index * 100"
-          v-once
+          
         >
           <div class="checkmark" v-if="selectedPlanIndex === index && !plan.isBonus">✔</div>
           <h2>{{ plan.title }}</h2>
@@ -113,7 +113,7 @@ function goToContactWithPlan() {
 <style scoped>
 .quotation {
   width: 100vw;
-  min-height: 100dvh; /* ✅ 改為 dvh 避免 iPhone Safari 高度錯誤 */
+  min-height: 100dvh;
   height: auto;
   background-size: cover;
   background-position: center;
@@ -121,12 +121,13 @@ function goToContactWithPlan() {
   padding: 80px 20px;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* ✅ 避免內容被撐爆後錯位 */
+  align-items: flex-start;
   overflow-x: hidden;
-  overflow-y: auto; /* ✅ 讓內容可以滾動 */
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   margin: 0;
 }
+
 
 .glass-card {
   max-width: 1100px;
@@ -161,11 +162,12 @@ function goToContactWithPlan() {
 }
 
 .price-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 32px;
   margin-bottom: 48px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 
