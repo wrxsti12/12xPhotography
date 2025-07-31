@@ -61,18 +61,23 @@
           <option>Reels短片紀錄</option>
         </select>
 
-        <input
-          v-model="shootDate"
-          type="date"
-          name="shoot_date"
-          class="contact-input"
-          :min="today"
-          required
-          data-aos="fade-up"
-          data-aos-delay="400"
-        />
+        <!-- 拍攝日期 Datepicker -->
+<Datepicker
+  v-model="selectedDate"
+  placeholder="請選擇拍攝日期"
+  :min-date="new Date()"
+  :enable-time-picker="false"
+  :disabled-dates="disableWeekdays"
+  :teleport="true"
+  class="contact-input"
+  name="shoot_date"
+  required
+  data-aos="fade-up"
+  data-aos-delay="400"
+/>
 
-        <select
+<!-- 拍攝時段 (早場/午場/晚場) -->
+<select
   v-model="shootClock"
   name="shoot_clock"
   class="contact-input"
@@ -93,20 +98,24 @@
           提交預約
         </button>
 
-        <p v-if="done" class="success-msg" data-aos="fade-up" data-aos-delay="100">
-          📩 預約已送出，請留意訊息通知！我會私訊與您確認詳細時間
-        </p>
+        <p v-if="done" class="success-msg">
+  📩 預約已送出，請留意訊息通知！我會私訊與您確認詳細時間
+</p>
       </form>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import emailjs from '@emailjs/browser'
 import { supabase } from '@/supabase'
 import marbleBg from '../assets/marble.jpg'
+import '@vuepic/vue-datepicker/dist/main.css'
+import Datepicker from '@vuepic/vue-datepicker'
+
+const selectedDate = ref(null)
 
 const form = ref(null)
 const done = ref(false)
@@ -117,9 +126,105 @@ const shootType = ref('')
 const shootDate = ref('')
 const shootClock = ref('')
 const route = useRoute()
-
 const selectedPlan = ref('')
+const today = new Date().toISOString().split('T')[0]
 
+// ✅ 判斷是否是假日（六日）
+function isWeekend(dateString) {
+  if (!dateString) return false
+  const day = new Date(dateString).getDay()
+  return day === 6 || day === 0
+}
+
+// ✅ 限定只能假日的方案
+const restrictedPlans = ['動態攝影', 'Reels短片拍攝']
+
+// ✅ 是否為受限方案（假日限定）
+const isWeekendRestricted = computed(() =>
+  restrictedPlans.includes(selectedPlan.value)
+)
+
+// ✅ 是否目前選了不合法的平日日期
+const isDateBlocked = computed(() =>
+  isWeekendRestricted.value && shootDate.value && !isWeekend(shootDate.value)
+)
+
+// ✅ 自動清除錯誤的日期
+watch([shootDate, selectedPlan], () => {
+  if (isWeekendRestricted.value && shootDate.value && !isWeekend(shootDate.value)) {
+    shootDate.value = ''
+  }
+})
+
+// ✅ Date + 時段合併時間
+const shootFullTime = computed(() => {
+  if (!shootDate.value || !shootClock.value) return ''
+  const [year, month, day] = shootDate.value.split('-')
+  return `${year}年${month}月${day}日 ${shootClock.value}`
+})
+
+// ✅ 判斷 IG 是否有效
+const isValidIG = ref(true)
+const showIGError = ref(false)
+const errorMessage = computed(() =>
+  showIGError.value ? '請輸入有效 IG 名稱（3~30字，只能包含英文、數字、. 和 _）' : ''
+)
+
+function handleIGInput() {
+  const pattern = /^[A-Za-z0-9._]{3,30}$/
+  isValidIG.value = pattern.test(userIG.value)
+  showIGError.value = userIG.value !== '' && !isValidIG.value
+}
+
+// ✅ 發送 Email + 寫入 Supabase
+async function sendEmail() {
+  handleIGInput()
+  if (!isValidIG.value) {
+    alert('請輸入正確的 IG 名稱')
+    return
+  }
+
+  try {
+    // 1️⃣ 若有特殊欄位，先手動補進表單
+    const fullTimeInput = form.value.querySelector('input[name="shoot_full_time"]')
+    if (fullTimeInput) fullTimeInput.value = shootFullTime.value
+
+    // 2️⃣ 建立 formData 並補入 DatePicker 欄位
+    const formData = new FormData(form.value)
+    formData.append('拍攝日期', shootDate.value) // ✅ 正確變數名，補對應欄位名稱
+
+
+    // 3️⃣ 傳送 EmailJS（改用 formData 傳遞）
+    await emailjs.sendForm('service_sutp5s9', 'template_gw85rci', form.value, '3DH3YZGxSTMbs0gwQ')
+
+    // 4️⃣ 同步寫入 Supabase
+    const { error } = await supabase.from('reservations').insert([
+      {
+        user_name: userName.value,
+        user_ig: userIG.value,
+        shoot_type: shootType.value,
+        shoot_date: shootDate.value,
+        shoot_clock: shootClock.value,
+        message: userNote.value,
+        plan: selectedPlan.value,
+        shoot_full_time: shootFullTime.value
+      }
+    ])
+
+    if (error) {
+      console.error('❌ Supabase 寫入失敗：', error.message)
+    } else {
+      done.value = true
+    }
+
+  } catch (err) {
+    console.error('❌ 發送或寫入錯誤：', err)
+    alert('提交失敗，請稍後再試')
+  }
+}
+
+
+// ✅ 根據 URL 帶入方案（初始化）
 onMounted(() => {
   const planParam = route.query.plan
   if (planParam) {
@@ -157,74 +262,21 @@ onMounted(() => {
   }
 })
 
-const shootFullTime = computed(() => {
-  if (!shootDate.value || !shootClock.value) return ''
-  const [year, month, day] = shootDate.value.split('-')
-  return `${year}年${month}月${day}日 ${shootClock.value}`
-})
-
-const isValidIG = ref(true)
-const showIGError = ref(false)
-
-const errorMessage = computed(() =>
-  showIGError.value ? '請輸入有效 IG 名稱（3~30字，只能包含英文、數字、. 和 _）' : ''
-)
-
-function handleIGInput() {
-  const pattern = /^[A-Za-z0-9._]{3,30}$/
-  isValidIG.value = pattern.test(userIG.value)
-  showIGError.value = userIG.value !== '' && !isValidIG.value
+function disableWeekdays(date) {
+  const day = date.getDay()
+  return day !== 6 && day !== 0 // 非六日就禁用
 }
-
-async function sendEmail() {
-  handleIGInput()
-  if (!isValidIG.value) {
-    alert('請輸入正確的 IG 名稱')
-    return
-  }
-
-  try {
-    const fullTimeInput = form.value.querySelector('input[name="shoot_full_time"]')
-    if (fullTimeInput) fullTimeInput.value = shootFullTime.value
-
-    await emailjs.sendForm(
-      'service_sutp5s9',
-      'template_gw85rci',
-      form.value,
-      '3DH3YZGxSTMbs0gwQ'
-    )
-
-    const { error } = await supabase.from('reservations').insert([
-      {
-        user_name: userName.value,
-        user_ig: userIG.value,
-        shoot_type: shootType.value,
-        shoot_date: shootDate.value,
-        shoot_clock: shootClock.value,
-        message: userNote.value,
-        plan: selectedPlan.value,
-        shoot_full_time: shootFullTime.value
-      }
-    ])
-
-    if (error) {
-      console.error('❌ Supabase 寫入失敗：', error.message)
-    } else {
-      done.value = true
-    }
-  } catch (err) {
-    console.error('❌ 發送或寫入錯誤：', err)
-    alert('提交失敗，請稍後再試')
-  }
-}
-
-const today = new Date().toISOString().split('T')[0]
 </script>
 
 
 
 
+
 <style scoped>
+
+.dp__menu {
+  z-index: 9999 !important;
+}
 .contact {
   display: flex;
   justify-content: center;
@@ -262,14 +314,17 @@ const today = new Date().toISOString().split('T')[0]
   width: 100%;
   margin: auto;
   text-align: center;
-  z-index: 1;
+  z-index: 0;
   position: relative;
+  pointer-events: auto;
 }
 
 .contact-form {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  position: relative;
+  z-index: 10;
 }
 
 .input-group {
@@ -407,11 +462,12 @@ const today = new Date().toISOString().split('T')[0]
   }
 
   .contact-input,
-  .contact-form textarea,
-  .contact-form select {
-    font-size: 1rem;
-    padding: 0.8rem 1rem;
-  }
+.contact-form textarea,
+.contact-form select {
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
 
   .submit-btn {
     font-size: 1rem;
@@ -425,8 +481,17 @@ const today = new Date().toISOString().split('T')[0]
 
 /* ✅ 更小手機尺寸補強：480px 以下 */
 @media (max-width: 480px) {
-  .glass-card {
-    padding: 1.5rem 1rem;
+  .contact-input,
+  .contact-form textarea,
+  .contact-form select {
+    font-size: 0.95rem;
+    padding: 0.75rem 0.9rem;
+    line-height: 1.4;
+  }
+
+
+  .main-title {
+    font-size: 1.5rem;
   }
 
   .contact {
@@ -459,7 +524,7 @@ const today = new Date().toISOString().split('T')[0]
   color: rgba(255, 255, 255, 0.9);
   font-family: 'Cormorant Garamond', serif;
   line-height: 1.8;
-  font-size: 1.05rem;
+  font-size: 1rem;
 }
 
 .price-text p {
@@ -468,5 +533,13 @@ const today = new Date().toISOString().split('T')[0]
 }
 }
 
-
+.contact-form input,
+.contact-form textarea,
+.contact-form select {
+  position: relative;
+  z-index: 20; /* 必須比 glass-card 高 */
+  background-color: rgba(255, 255, 255, 0.05);
+  color: white;
+  pointer-events: auto; /* 強制可點 */
+}
 </style>
