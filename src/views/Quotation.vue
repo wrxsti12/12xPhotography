@@ -16,7 +16,7 @@
           @click="handleSelect(index)"
           data-aos="fade-up"
           :data-aos-delay="300 + index * 100"
-          
+          v-once
         >
           <div class="checkmark" v-if="selectedPlanIndex === index && !plan.isBonus">✔</div>
           <h2>{{ plan.title }}</h2>
@@ -169,6 +169,7 @@ function goToContactWithPlan() {
   width: 100%;
   box-sizing: border-box;
 }
+
 
 
 
