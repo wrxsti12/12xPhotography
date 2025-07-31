@@ -33,7 +33,7 @@
       </div>
 
       <!-- 優惠方案卡片 -->
-      <div class="bonus-note" data-aos="fade-up" data-aos-delay="650">
+      <div class="bonus-note aos-init aos-animate" data-aos="fade-up" data-aos-delay="650">
         <p class="bonus-title">📩 優惠方案</p>
         <p class="bonus-desc">
           靜態＋動態同日拍攝享 <strong>9 折優惠</strong><br />
@@ -42,12 +42,12 @@
       </div>
 
       <!-- 引導提示 / 已選提示 -->
-      <p v-if="selectedPlanIndex === null" class="tip-text">
-        請先選擇一個方案才能預約
-      </p>
-      <p v-else class="selection-label" data-aos="fade-in">
-        ✅ 你已選擇方案：<strong>{{ plans[selectedPlanIndex].title }}</strong>
-      </p>
+      <p class="tip-text" v-if="selectedPlanIndex === null">
+  請先選擇一個方案才能預約
+</p>
+<p class="selection-label" v-if="selectedPlanIndex !== null">
+  ✅ 你已選擇方案：<strong>{{ plans[selectedPlanIndex].title }}</strong>
+</p>
 
       <!-- 預約按鈕 -->
       <button
@@ -147,12 +147,12 @@ function goToContactWithPlan() {
   color: white;
   box-sizing: border-box;
 
-  /* ✅ 移除高限制與 overflow，自然展開內容 */
-  overflow: visible;
+  /* ✅ 核心修正：放開高度限制與overflow */
   max-height: none;
   height: auto;
-  padding-bottom: 96px;
+  overflow: visible;
 }
+
 
 
 .main-title {
