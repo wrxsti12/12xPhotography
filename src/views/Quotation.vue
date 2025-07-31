@@ -376,13 +376,14 @@ function goToContactWithPlan() {
 @media (max-width: 480px) {
   .glass-card {
     padding: 24px 16px;
-    height: auto;              /* ✅ 移除 min-height，確保展開 */
-    overflow: unset;           /* ✅ 移除 visible !important，恢復 scroll 功能 */
+    height: auto;
+    overflow: visible;
   }
 
   .quotation {
     padding: 24px 16px;
-    overflow-y: auto;          /* ✅ 允許手機上下滾動 */
+    overflow-y: auto;
+    height: 100vh; /* ✅ 加這行，整個頁面能上下滾動 */
   }
 
   .cta-button {
@@ -405,6 +406,7 @@ function goToContactWithPlan() {
     font-size: 16px;
   }
 }
+
 
 </style>
 
