@@ -376,19 +376,19 @@ function goToContactWithPlan() {
 @media (max-width: 480px) {
   .glass-card {
     padding: 24px 16px;
-    height: auto;
     overflow: visible;
+    height: auto;
   }
 
   .quotation {
     padding: 24px 16px;
     overflow-y: auto;
-    height: 100vh; /* ✅ 加這行，整個頁面能上下滾動 */
+    height: 100vh; /* ✅ 讓整個頁面可滾動顯示底部按鈕 */
   }
 
   .cta-button {
     display: block;
-    margin: 1.5rem auto 0;
+    margin: 2rem auto 0;
     width: 100%;
   }
 
