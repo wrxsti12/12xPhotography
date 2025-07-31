@@ -72,15 +72,19 @@
           data-aos-delay="400"
         />
 
-        <input
-          v-model="shootClock"
-          type="time"
-          name="shoot_clock"
-          class="contact-input"
-          required
-          data-aos="fade-up"
-          data-aos-delay="410"
-        />
+        <select
+  v-model="shootClock"
+  name="shoot_clock"
+  class="contact-input"
+  required
+  data-aos="fade-up"
+  data-aos-delay="410"
+>
+  <option disabled selected value="">請選擇拍攝時段</option>
+  <option value="早場">早場</option>
+  <option value="午場">午場</option>
+  <option value="晚場">晚場</option>
+</select>
 
         <input type="hidden" name="shoot_full_time" :value="shootFullTime" />
         <input v-if="selectedPlan" type="hidden" name="plan" :value="selectedPlan" />
@@ -89,7 +93,7 @@
           提交預約
         </button>
 
-        <p v-if="done" class="success-msg" data-aos="fade-up" data-aos-delay="1000">
+        <p v-if="done" class="success-msg" data-aos="fade-up" data-aos-delay="100">
           📩 預約已送出，請留意訊息通知！我會私訊與您確認詳細時間
         </p>
       </form>
@@ -101,6 +105,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import emailjs from '@emailjs/browser'
+import { supabase } from '@/supabase'
 import marbleBg from '../assets/marble.jpg'
 
 const form = ref(null)
@@ -121,14 +126,12 @@ onMounted(() => {
     const decodedPlan = decodeURIComponent(planParam)
     selectedPlan.value = decodedPlan
 
-    // 自動寫入 userNote（避免覆蓋使用者手動輸入）
     if (userNote.value === '') {
       userNote.value = `【方案】${decodedPlan}`
     } else if (!userNote.value.includes(decodedPlan)) {
       userNote.value = `【方案】${decodedPlan}\n${userNote.value}`
     }
 
-    // 自動同步拍攝類型欄位（shootType）
     if (shootType.value === '') {
       switch (decodedPlan) {
         case '靜態攝影':
@@ -146,7 +149,6 @@ onMounted(() => {
     }
   }
 
-  // IG 檢查邏輯照常保留
   if (userIG.value === '') {
     isValidIG.value = true
     showIGError.value = false
@@ -154,7 +156,6 @@ onMounted(() => {
     handleIGInput()
   }
 })
-
 
 const shootFullTime = computed(() => {
   if (!shootDate.value || !shootClock.value) return ''
@@ -175,7 +176,7 @@ function handleIGInput() {
   showIGError.value = userIG.value !== '' && !isValidIG.value
 }
 
-function sendEmail() {
+async function sendEmail() {
   handleIGInput()
   if (!isValidIG.value) {
     alert('請輸入正確的 IG 名稱')
@@ -186,23 +187,40 @@ function sendEmail() {
     const fullTimeInput = form.value.querySelector('input[name="shoot_full_time"]')
     if (fullTimeInput) fullTimeInput.value = shootFullTime.value
 
-    emailjs.sendForm(
+    await emailjs.sendForm(
       'service_sutp5s9',
       'template_gw85rci',
       form.value,
       '3DH3YZGxSTMbs0gwQ'
-    ).then(() => {
+    )
+
+    const { error } = await supabase.from('reservations').insert([
+      {
+        user_name: userName.value,
+        user_ig: userIG.value,
+        shoot_type: shootType.value,
+        shoot_date: shootDate.value,
+        shoot_clock: shootClock.value,
+        message: userNote.value,
+        plan: selectedPlan.value,
+        shoot_full_time: shootFullTime.value
+      }
+    ])
+
+    if (error) {
+      console.error('❌ Supabase 寫入失敗：', error.message)
+    } else {
       done.value = true
-    }).catch((error) => {
-      alert('發送失敗：' + error.text)
-    })
+    }
   } catch (err) {
-    alert('提交表單發生錯誤，請稍後再試')
+    console.error('❌ 發送或寫入錯誤：', err)
+    alert('提交失敗，請稍後再試')
   }
 }
 
 const today = new Date().toISOString().split('T')[0]
 </script>
+
 
 
 
