@@ -54,8 +54,7 @@
   class="cta-button"
   :disabled="selectedPlanIndex === null"
   @click="goToContactWithPlan"
-  data-aos="fade-up"
-  data-aos-delay="700"
+  
 >
   我要預約
 </button>
@@ -388,10 +387,12 @@ function goToContactWithPlan() {
   }
 
   .cta-button {
-    display: block;
-    margin: 2rem auto 0;
-    width: 100%;
-  }
+  display: block;
+  width: 100%;
+  margin: 1.5rem auto 0;
+  position: relative;
+  z-index: 2;
+}
 
   .bonus-note {
     font-size: 14px;
