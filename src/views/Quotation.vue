@@ -49,16 +49,17 @@
   ✅ 你已選擇方案：<strong>{{ plans[selectedPlanIndex].title }}</strong>
 </p>
 
-      <!-- 預約按鈕 -->
-      <button
-        class="cta-button"
-        @click="goToContactWithPlan"
-        :disabled="selectedPlanIndex === null"
-        data-aos="fade-up"
-        data-aos-delay="700"
-      >
-        我要預約
-      </button>
+      <!-- 保證按鈕永遠存在，只在沒選方案時 disable -->
+<button
+  class="cta-button"
+  :disabled="selectedPlanIndex === null"
+  @click="goToContactWithPlan"
+  data-aos="fade-up"
+  data-aos-delay="700"
+>
+  我要預約
+</button>
+
     </div>
   </section>
 </template>
