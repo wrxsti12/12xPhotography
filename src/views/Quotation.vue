@@ -113,7 +113,7 @@ function goToContactWithPlan() {
 <style scoped>
 .quotation {
   width: 100vw;
-  min-height: 100dvh;
+  min-height: 100vh;
   height: auto;
   background-size: cover;
   background-position: center;
@@ -142,10 +142,11 @@ function goToContactWithPlan() {
   color: white;
   box-sizing: border-box;
 
-  /* ✅ 修正關鍵：讓內容在手機可滾動顯示 */
-  max-height: 90vh;
-  overflow-y: auto;
-  padding-bottom: 96px; /* 給 "立即預約" 空間 */
+  /* ✅ 移除高限制與 overflow，自然展開內容 */
+  overflow: visible;
+  max-height: none;
+  height: auto;
+  padding-bottom: 96px;
 }
 
 
@@ -175,7 +176,9 @@ function goToContactWithPlan() {
 
 .price-box {
   position: relative;
-  width: 300px; /* ✅ 統一尺寸 */
+  width: 100%; /* ✅ 手機不強制固定寬度 */
+  max-width: 300px; /* ✅ 保持桌機一致外觀 */
+  margin: 0 auto;
   background: rgba(255, 255, 255, 0.07);
   border-radius: 20px;
   padding: 32px 24px;
@@ -187,6 +190,7 @@ function goToContactWithPlan() {
   transform: scale(1);
   text-align: center;
 }
+
 
 
 .price-box:hover {
@@ -367,13 +371,13 @@ function goToContactWithPlan() {
 @media (max-width: 480px) {
   .glass-card {
     padding: 24px 16px;
-    min-height: auto;
-    overflow: visible !important;
+    height: auto;              /* ✅ 移除 min-height，確保展開 */
+    overflow: unset;           /* ✅ 移除 visible !important，恢復 scroll 功能 */
   }
 
   .quotation {
     padding: 24px 16px;
-    overflow: visible !important;
+    overflow-y: auto;          /* ✅ 允許手機上下滾動 */
   }
 
   .cta-button {
@@ -396,6 +400,7 @@ function goToContactWithPlan() {
     font-size: 16px;
   }
 }
+
 </style>
 
 

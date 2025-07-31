@@ -37,7 +37,7 @@
   data-aos-delay="800"
   data-aos-duration="800"
 >
-  查看報價單
+  立即預約
 </router-link>
 
     </div>
