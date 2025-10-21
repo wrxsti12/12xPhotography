@@ -4,7 +4,7 @@
       <!-- 標題區 -->
       <h1 class="main-title" data-aos="fade-up" data-aos-delay="100">報價方案</h1>
       <p class="subtitle" data-aos="fade-up" data-aos-delay="200">
-        簡約、高效、專屬於你的拍攝體驗
+        簡約、專屬於你的拍攝體驗
       </p>
 
       <!-- 方案區 -->
@@ -84,12 +84,12 @@ const plans = [
   {
     title: '動態攝影',
     desc: '標準 Rolling Shot 服務',
-    priceLines: ['10-15 張｜$3,000']
+    priceLines: ['10-15 張｜$3,500']
   },
   {
     title: 'Reels短片拍攝',
     desc: '專屬客製拍攝計畫',
-    priceLines: ['騎行+運鏡(含剪輯)｜$3500']
+    priceLines: ['騎行+運鏡(含剪輯)｜$4000']
   }
 ]
 

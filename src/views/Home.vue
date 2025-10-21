@@ -22,8 +22,8 @@
 
       <!-- 品牌理念文字區塊（質感分行） -->
 <div class="brand-philosophy-text" data-aos="fade-up" data-aos-delay="600">
-  <span><strong>ONE2FRAME</strong>，來自於「One to Frame」的概念。</span>
-  <span>代表一個人走向創作者的旅程。</span>
+  <span><strong>ONE2FRAME</strong><br>來自於「One to Frame」的概念</span>
+  <span>代表一個人走向創作者的旅程，這是我親手建造的網站。</span>
 
 </div>
 
