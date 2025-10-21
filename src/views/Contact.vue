@@ -16,7 +16,7 @@
             class="contact-input"
             type="text"
             name="user_name"
-            placeholder="請輸入您的姓名/綽號"
+            placeholder="請輸入您的車款名稱"
             autocomplete="off"
             required
           />
