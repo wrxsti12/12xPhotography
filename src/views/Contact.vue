@@ -88,6 +88,7 @@
         <input type="hidden" name="shoot_full_time" :value="shootFullTime" />
         <input v-if="selectedPlan" type="hidden" name="plan" :value="selectedPlan" />
 
+
         <button
           type="submit"
           class="submit-btn"
@@ -96,13 +97,16 @@
           data-aos-delay="800"
         >
           <span v-if="!isSubmitting">提交預約</span>
-          <span v-else>送出中...</span>
+          <span v-else>已送出✅</span>
         </button>
 
         <!-- 成功訊息（按下提交後立即顯示） -->
-        <div v-if="done" class="status-message success pinned">
-          ✅ 預約完成！我們已收到您的預約，會盡快與您聯絡確認時間。
-        </div>
+        <div v-if="done" class="status-message success pinned" 
+     style="display: flex; justify-content: center; align-items: center; text-align: center; padding: 10px; height: 60px;">
+  ✅ 預約完成！已收到您的預約，會盡快與您聯絡確認時間。
+</div>
+
+
 
         <!-- 仍保留一般的狀態訊息（開發用） -->
         <div v-if="statusMessage && !done" class="status-message" :class="statusType">
@@ -125,7 +129,7 @@ import Datepicker from '@vuepic/vue-datepicker'
 /* ---------- state ---------- */
 const form = ref(null)
 const isSubmitting = ref(false)
-const done = ref(false)               // 按下提交後立即變 true，顯示「預約完成」
+const done = ref(false)
 const userName = ref('')
 const userIG = ref('')
 const userNote = ref('')
@@ -135,8 +139,8 @@ const shootClock = ref('')
 const selectedDate = ref(null)  // Datepicker 綁定
 const route = useRoute()
 const selectedPlan = ref('')
-const statusMessage = ref('')   // 開發/錯誤顯示（但不會在成功時覆蓋）
-const statusType = ref('')      // 'error' 等
+const statusMessage = ref('')
+const statusType = ref('')
 
 /* ---------- IG 驗證 ---------- */
 const isValidIG = ref(true)
@@ -185,18 +189,18 @@ function disableWeekdays(date) {
   return day !== 6 && day !== 0
 }
 
-/* ---------- 顯示時間文字 ---------- */
+/* ---------- 顯示完整時間 ---------- */
 const shootFullTime = computed(() => {
   if (!shootDate.value || !shootClock.value) return ''
   const [year, month, day] = shootDate.value.split('-')
   return `${year}年${month}月${day}日 ${shootClock.value}`
 })
 
-/* ---------- 送出行為（樂觀 UI） ---------- */
+/* ---------- 送出行為 ---------- */
 async function sendEmail() {
   if (isSubmitting.value) return
 
-  // 基本驗證
+  // 驗證
   handleIGInput()
   if (!isValidIG.value) {
     statusMessage.value = '請輸入正確的 IG 名稱'
@@ -209,51 +213,52 @@ async function sendEmail() {
     return
   }
 
-  // 立刻切換為已提交狀態（樂觀 UI）
+  // 樂觀 UI
   isSubmitting.value = true
   done.value = true
   statusMessage.value = ''
   statusType.value = ''
 
-  // 非阻塞的後端嘗試（失敗僅記錄於 console）
-  // 注意：這裡仍會執行 await，但任何錯誤僅做 console.error，不會影響前端顯示
   try {
-    // 確保隱藏欄位同步
-    const fullTimeInput = form.value.querySelector('input[name="shoot_full_time"]')
-    if (fullTimeInput) fullTimeInput.value = shootFullTime.value
+    // 同步隱藏欄位，只保留 shoot_full_time 給 EmailJS
+    if (form.value) {
+      const fullTimeInput = form.value.querySelector('input[name="shoot_full_time"]')
+      if (fullTimeInput) {
+        fullTimeInput.setAttribute('value', shootFullTime.value)
+        fullTimeInput.value = shootFullTime.value
+      }
 
-    // 1) 發送 EmailJS（若失敗會被 catch，但不改 UI）
+      // Plan 欄位同步
+      const planInput = form.value.querySelector('input[name="plan"]')
+      if (planInput && selectedPlan.value) {
+        planInput.setAttribute('value', selectedPlan.value)
+        planInput.value = selectedPlan.value
+      }
+    }
+
+    // 發送 EmailJS
     await emailjs.sendForm('service_sutp5s9', 'template_gw85rci', form.value, '3DH3YZGxSTMbs0gwQ')
 
-    // 2) 嘗試寫入 Supabase（若失敗只 log）
+    // 寫入 Supabase
     const { error } = await supabase.from('reservations').insert([
       {
         user_name: userName.value,
         user_ig: userIG.value,
         shoot_type: shootType.value,
-        shoot_date: shootDate.value,
+        shoot_date: shootDate.value,       // YYYY-MM-DD 存資料庫
         shoot_clock: shootClock.value,
         message: userNote.value,
         plan: selectedPlan.value,
-        shoot_full_time: shootFullTime.value
+        shoot_full_time: shootFullTime.value  // 完整日期 + 時段
       }
     ])
-
-    if (error) {
-      // 僅在 console 顯示錯誤，前端仍維持成功顯示
-      console.error('[DB 寫入失敗]', error)
-      // 可選：你也可以把錯誤發到某個管理用 webhook 或紀錄表，這裡示範只記錄
-    } else {
-      console.log('[DB 寫入成功]')
-    }
+    if (error) console.error('[DB 寫入失敗]', error)
+    else console.log('[DB 寫入成功]')
   } catch (err) {
-    // 任何發信或寫入過程中的 Exception 都只記錄於 console
     console.error('[送出過程錯誤]', err)
   } finally {
-    // 保持已提交樣式，但解除按鈕 disabled（或保留 disabled 視需求）
-    // 這裡我們保留按鈕 disabled，避免重複提交
+    // 保留按鈕 disabled
     isSubmitting.value = true
-    // 若你希望使用者能再次送出（例如送出失敗時），把上面改為 false 即可
   }
 }
 
@@ -288,6 +293,9 @@ onMounted(() => {
   }
 })
 </script>
+
+
+
 
 <style scoped>
 .contact {

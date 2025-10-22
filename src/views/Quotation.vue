@@ -116,7 +116,9 @@ function goToContactWithPlan() {
 
 
 <style scoped>
+/* ---------- 容器與背景（加 overlay） ---------- */
 .quotation {
+  position: relative; /* 為 ::before overlay 準備定位上下文 */
   width: 100vw;
   min-height: 100vh;
   height: auto;
@@ -131,10 +133,30 @@ function goToContactWithPlan() {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   margin: 0;
+  /* 若你是用 inline style 綁 background-image (:style)，overlay 仍會套用 */
 }
 
+/* 深色 overlay：預設桌機/平板用 55% 深度 */
+.quotation::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.52) 40%, rgba(0,0,0,0.46) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
 
+/* 手機裝置使用更深的遮罩，避免背景干擾文字 */
+@media (max-width: 480px) {
+  .quotation::before {
+    background: linear-gradient(180deg, rgba(0,0,0,0.76) 0%, rgba(0,0,0,0.72) 40%, rgba(0,0,0,0.66) 100%);
+  }
+}
+
+/* 保證內容在 overlay 之上（z-index 管理） */
 .glass-card {
+  position: relative;
+  z-index: 2;
   max-width: 1100px;
   width: 100%;
   padding: 48px;
@@ -153,8 +175,7 @@ function goToContactWithPlan() {
   overflow: visible;
 }
 
-
-
+/* ---------- 文字與標題 ---------- */
 .main-title {
   font-size: 42px;
   margin-bottom: 16px;
@@ -167,6 +188,7 @@ function goToContactWithPlan() {
   opacity: 0.85;
 }
 
+/* ---------- 價格格子 ---------- */
 .price-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -176,13 +198,12 @@ function goToContactWithPlan() {
   box-sizing: border-box;
 }
 
-
-
-
+/* ---------- 單卡（保持玻璃感，同時在 overlay 之上） ---------- */
 .price-box {
   position: relative;
-  width: 100%; /* ✅ 手機不強制固定寬度 */
-  max-width: 300px; /* ✅ 保持桌機一致外觀 */
+  z-index: 3; /* 高於 .glass-card，避免被其他元素覆蓋 */
+  width: 100%; /* 手機不強制固定寬度 */
+  max-width: 300px; /* 保持桌機一致外觀 */
   margin: 0 auto;
   background: rgba(255, 255, 255, 0.07);
   border-radius: 20px;
@@ -194,9 +215,8 @@ function goToContactWithPlan() {
               0 4px 12px rgba(0, 0, 0, 0.25);
   transform: scale(1);
   text-align: center;
+  color: #fff;
 }
-
-
 
 .price-box:hover {
   transform: scale(1.04);
@@ -205,15 +225,15 @@ function goToContactWithPlan() {
   background: rgba(255, 255, 255, 0.12);
 }
 
-
 .price-box.selected {
   transform: scale(1.05);
   border: 2px solid #00ffc8;
   background: rgba(0, 255, 200, 0.08);
   box-shadow: 0 0 20px rgba(0, 255, 200, 0.3);
-  z-index: 2;
+  z-index: 4;
 }
 
+/* 勾勾圖示 */
 .checkmark {
   position: absolute;
   top: 14px;
@@ -259,6 +279,7 @@ function goToContactWithPlan() {
   font-weight: bold;
 }
 
+/* CTA 按鈕 */
 .cta-button {
   padding: 12px 28px;
   background-color: #ffffff22;
@@ -281,6 +302,7 @@ function goToContactWithPlan() {
   cursor: not-allowed;
 }
 
+/* 小提示文字 */
 .tip-text {
   font-size: 0.95rem;
   margin-top: -12px;
@@ -308,6 +330,7 @@ function goToContactWithPlan() {
   }
 }
 
+/* Bonus 盒（不可點） */
 .price-box.bonus {
   cursor: default;
   background: rgba(255, 255, 255, 0.06);
@@ -327,6 +350,7 @@ function goToContactWithPlan() {
   color: rgba(255, 255, 255, 0.75);
 }
 
+/* Bonus 區塊樣式 */
 .bonus-note {
   margin-top: 48px;
   margin-bottom: 32px;
@@ -359,6 +383,7 @@ function goToContactWithPlan() {
   margin-bottom: 8px;
 }
 
+/* 價格項目列 */
 .price-lines {
   list-style: none;
   padding: 0;
@@ -373,6 +398,7 @@ function goToContactWithPlan() {
   margin: 4px 0;
 }
 
+/* ---------- 行動響應 ---------- */
 @media (max-width: 480px) {
   .glass-card {
     padding: 24px 16px;
@@ -383,16 +409,16 @@ function goToContactWithPlan() {
   .quotation {
     padding: 24px 16px;
     overflow-y: auto;
-    height: 100vh; /* ✅ 讓整個頁面可滾動顯示底部按鈕 */
+    height: 100vh; /* 讓整個頁面可滾動顯示底部按鈕 */
   }
 
   .cta-button {
-  display: block;
-  width: 100%;
-  margin: 1.5rem auto 0;
-  position: relative;
-  z-index: 2;
-}
+    display: block;
+    width: 100%;
+    margin: 1.5rem auto 0;
+    position: relative;
+    z-index: 3;
+  }
 
   .bonus-note {
     font-size: 14px;
@@ -407,9 +433,20 @@ function goToContactWithPlan() {
   .price-box h3 {
     font-size: 16px;
   }
+
+  /* 手機上進一步確保文字對比（若需要，啟用） */
+  .price-box {
+    background: rgba(255, 255, 255, 0.06);
+  }
 }
 
-
+/* 可選：如果你希望在特定斷點使用更淺或更深 overlay，可在這裡新增 media query */
+@media (min-width: 1200px) {
+  /* 桌機可視需求微調 */
+  .quotation::before {
+    background: linear-gradient(180deg, rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.46) 40%, rgba(0,0,0,0.42) 100%);
+  }
+}
 </style>
 
 
